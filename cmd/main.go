@@ -3,11 +3,12 @@ package main
 import (
 	"app/database"
 	"app/utils"
-	"context"
 	"fmt"
 	"os"
 	"time"
 )
+
+var pin = "310303"
 
 func menu() {
 	for {
@@ -97,8 +98,14 @@ func main() {
 
 	database.Connect()
 	time.Sleep(1 * time.Second)
-	defer database.Client.Disconnect(context.TODO())
+	defer database.Disconnect()
 	fmt.Println("Connected to MongoDB!")
-
+	fmt.Print("Enter your pin code to log in: ")
+	var enteredPin string
+	fmt.Scanln(&enteredPin)
+	if enteredPin != pin {
+		fmt.Println("Invalid pin code. Exiting...")
+		os.Exit(1)
+	}
 	menu()
 }

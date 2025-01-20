@@ -32,10 +32,12 @@ func Connect() {
 	time.Sleep(1 * time.Second)
 	utils.ClearCmd()
 }
-func Disconnect() {
+func Disconnect() error {
 	if err := Client.Disconnect(context.TODO()); err != nil {
-		log.Fatal(err)
+		return err
 	}
+	fmt.Println("Disconnected from MongoDB!")
+	return nil
 }
 func GetUserInformation() (string, string, string, error) {
 	var fullName, phoneNumber, gender string
