@@ -10,8 +10,28 @@ import (
 	"golang.org/x/term"
 )
 
-var pin = "310303"
+const pin = "310303"
 
+func main() {
+	fmt.Print("\\ \\        /         __ \\ _)      _) |         | \n" +
+		" \\ \\  \\   / _ \\  _ \\ |   | |  _` | | __|  _` | | \n" +
+		"  \\ \\  \\ /  __/  __/ |   | | (   | | |   (   | | \n" +
+		"   \\_/\\_/ \\___|\\___|____/ _|\\__, |_|\\__|\\__,_|_| \n" +
+		"                            |___/                \n")
+
+	database.Connect()
+	time.Sleep(1 * time.Second)
+	defer database.Disconnect()
+	fmt.Println("Connected to MongoDB!")
+	if enterPin() {
+		menu()
+	} else {
+		fmt.Println("Exiting...")
+		utils.Loading(1 * time.Second)
+		utils.ClearCmd()
+		os.Exit(0)
+	}
+}
 func menu() {
 	for {
 		utils.ClearCmd()
@@ -120,24 +140,4 @@ func enterPin() bool {
 	os.Exit(1)
 
 	return false // Dòng này không bao giờ chạy, nhưng giữ để hàm hợp lệ
-}
-func main() {
-	fmt.Print("\\ \\        /         __ \\ _)      _) |         | \n" +
-		" \\ \\  \\   / _ \\  _ \\ |   | |  _` | | __|  _` | | \n" +
-		"  \\ \\  \\ /  __/  __/ |   | | (   | | |   (   | | \n" +
-		"   \\_/\\_/ \\___|\\___|____/ _|\\__, |_|\\__|\\__,_|_| \n" +
-		"                            |___/                \n")
-
-	database.Connect()
-	time.Sleep(1 * time.Second)
-	defer database.Disconnect()
-	fmt.Println("Connected to MongoDB!")
-	if enterPin() {
-		menu()
-	} else {
-		fmt.Println("Exiting...")
-		utils.Loading(1 * time.Second)
-		utils.ClearCmd()
-		os.Exit(0)
-	}
 }
