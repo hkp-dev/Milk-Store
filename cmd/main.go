@@ -111,7 +111,7 @@ func enterPin() bool {
 
 	for enterCount > 0 {
 		bytePin, err := term.ReadPassword(int(os.Stdin.Fd()))
-		fmt.Println() // Xuống dòng sau khi nhập
+		fmt.Println()
 		if err != nil {
 			fmt.Println("Error reading pin code: ", err)
 			return false
@@ -133,5 +133,5 @@ func enterPin() bool {
 	fmt.Println("Exceeded maximum number of attempts. Exiting...")
 	os.Exit(1)
 
-	return false // Dòng này không bao giờ chạy, nhưng giữ để hàm hợp lệ
+	return false
 }
