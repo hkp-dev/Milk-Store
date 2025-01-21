@@ -40,7 +40,8 @@ func menu() {
 		fmt.Println("2. Find customer by phone number")
 		fmt.Println("3. Listing all users")
 		fmt.Println("4. Exit")
-		fmt.Print("Enter your choice(1-4): ")
+		fmt.Println("5. Help")
+		fmt.Print("Enter your choice(1-5): ")
 
 		var choice int
 		_, err := fmt.Scanln(&choice)
@@ -98,6 +99,9 @@ func menu() {
 			utils.Loading(1 * time.Second)
 			utils.ClearCmd()
 			os.Exit(0)
+		case 5:
+			utils.ClearCmd()
+			displayHelp()
 		default:
 			fmt.Println("Invalid choice. Please try again.")
 		}
@@ -105,6 +109,28 @@ func menu() {
 		fmt.Scanln()
 	}
 }
+func displayHelp() {
+	fmt.Println("Help - User Guide")
+	fmt.Println("1. Enroll user:")
+	fmt.Println("   - To enroll a new user, choose option 1 from the menu.")
+	fmt.Println("   - Enter the user's full name, phone number, and gender.")
+	fmt.Println("   - The system will check if the user already exists. If not, the user will be added.")
+	fmt.Println()
+	fmt.Println("2. Find customer by phone number:")
+	fmt.Println("   - Choose option 2 from the menu to find a user by phone number.")
+	fmt.Println("   - Enter the phone number, and the system will display the user's details.")
+	fmt.Println()
+	fmt.Println("3. Listing all users:")
+	fmt.Println("   - Option 3 allows you to see a list of all users in the system.")
+	fmt.Println("   - This will display the full name, phone number, and gender of each user.")
+	fmt.Println()
+	fmt.Println("4. Exit:")
+	fmt.Println("   - Option 4 will exit the program.")
+	fmt.Println()
+	fmt.Println("5. Help:")
+	fmt.Println("   - Option 5 shows this guide to help you navigate the system.")
+}
+
 func enterPin() bool {
 	fmt.Print("Enter your 6-digit PIN code to log in: ")
 	enterCount := 3
