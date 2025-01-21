@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"golang.org/x/term"
 )
 
 var pin = "310303"
@@ -89,6 +91,36 @@ func menu() {
 		fmt.Scanln()
 	}
 }
+func enterPin() bool {
+	fmt.Print("Enter your 6-digit PIN code to log in: ")
+	enterCount := 3
+
+	for enterCount > 0 {
+		bytePin, err := term.ReadPassword(int(os.Stdin.Fd()))
+		fmt.Println() // Xuống dòng sau khi nhập
+		if err != nil {
+			fmt.Println("Error reading pin code: ", err)
+			return false
+		}
+		enteredPin := string(bytePin)
+
+		if enteredPin == pin {
+			return true
+		}
+
+		enterCount--
+		if enterCount > 0 {
+			fmt.Printf("Invalid pin code. Please try again (%d attempts left).\n", enterCount)
+			fmt.Print("Enter your 6-digit PIN code to log in: ")
+		}
+	}
+
+	utils.ClearCmd()
+	fmt.Println("Exceeded maximum number of attempts. Exiting...")
+	os.Exit(1)
+
+	return false // Dòng này không bao giờ chạy, nhưng giữ để hàm hợp lệ
+}
 func main() {
 	fmt.Print("\\ \\        /         __ \\ _)      _) |         | \n" +
 		" \\ \\  \\   / _ \\  _ \\ |   | |  _` | | __|  _` | | \n" +
@@ -100,12 +132,12 @@ func main() {
 	time.Sleep(1 * time.Second)
 	defer database.Disconnect()
 	fmt.Println("Connected to MongoDB!")
-	fmt.Print("Enter your pin code to log in: ")
-	var enteredPin string
-	fmt.Scanln(&enteredPin)
-	if enteredPin != pin {
-		fmt.Println("Invalid pin code. Exiting...")
-		os.Exit(1)
+	if enterPin() {
+		menu()
+	} else {
+		fmt.Println("Exiting...")
+		utils.Loading(1 * time.Second)
+		utils.ClearCmd()
+		os.Exit(0)
 	}
-	menu()
 }
