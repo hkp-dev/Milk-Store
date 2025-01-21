@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	uri = "mongodb://khoauser:Sycomore22@sycomore.vn:27014/?authSource=newdb"
+	Uri = "mongodb://khoauser:Sycomore22@sycomore.vn:27014/?authSource=newdb"
 )
 
 var Client *mongo.Client
@@ -22,7 +22,7 @@ var Client *mongo.Client
 func Connect() {
 	ctx := context.Background()
 	var err error
-	Client, err = mongo.Connect(ctx, options.Client().ApplyURI(uri))
+	Client, err = mongo.Connect(ctx, options.Client().ApplyURI(Uri))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,12 +76,6 @@ func UserExists(phoneNumber string) bool {
 	return err != mongo.ErrNoDocuments
 }
 func AddUserToDatabase(fullName, phoneNumber, gender string) (interface{}, error) {
-	fmt.Printf("Are you sure to enroll user with:\nFull Name: %s\nPhone Number: %s\nGender: %s\n", fullName, phoneNumber, gender)
-	fmt.Print("y/n: ")
-	confirm := utils.GetInputFromKeyboard().(string)
-	if confirm != "y" {
-		return "enroll user canceled", nil
-	}
 	collection := Client.Database("newdb").Collection("milk-store-hkp")
 	data := bson.M{
 		"fullName":     fullName,

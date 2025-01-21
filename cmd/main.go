@@ -59,12 +59,6 @@ func menu() {
 				fmt.Scanln()
 				continue
 			}
-			// if !database.ConfirmUserDetails(fullName, phoneNumber, gender) {
-			// 	fmt.Println("Enrollment cancelled.")
-			// 	fmt.Println("Press Enter to continue...")
-			// 	fmt.Scanln()
-			// 	continue
-			// }
 
 			if database.UserExists(phoneNumber) {
 				fmt.Println("User already exists.")
