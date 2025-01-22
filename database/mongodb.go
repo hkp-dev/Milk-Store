@@ -26,6 +26,9 @@ func Connect() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	if err := Client.Ping(ctx, nil); err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println("Initializing...")
 	utils.Loading(2 * time.Second)
 	fmt.Println("Connected to MongoDB!")
@@ -100,6 +103,7 @@ func FoundUserByPhoneNumber(phoneNumber string) (bson.M, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Found user: %v\n", user)
 	return user, nil
 }
 func GetPhoneNumber() (string, error) {
@@ -107,37 +111,41 @@ func GetPhoneNumber() (string, error) {
 	phoneNumber := utils.GetInputFromKeyboard().(string)
 	err := validate.ValidatePhoneNumber(phoneNumber)
 	if err != nil {
-		return "", err
+		return "", validate.InvalidPhoneNumber
 	}
 	return phoneNumber, nil
 }
 func GetAllUsers() {
 	collection := Client.Database("newdb").Collection("milk-store-hkp")
-	filter := bson.D{}
-	cursor, err := collection.Find(context.TODO(), filter)
+	// Find all documents in the collection, with a limit of 100.
+	cursor, err := collection.Find(context.TODO(), bson.D{}, options.Find().SetLimit(100))
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println("Error fetching users:", err)
 		return
 	}
+	defer cursor.Close(context.TODO())
+	// create a slice to hold the results, and decode each document into a slice of bson.M
 	var users []bson.M
 	for cursor.Next(context.TODO()) {
 		var user bson.M
-		err := cursor.Decode(&user)
-		if err != nil {
-			fmt.Print("Error decoding user: ", err)
-			return
+		if err := cursor.Decode(&user); err != nil {
+			fmt.Println("Skipping user due to decoding error:", err)
+			continue
 		}
 		users = append(users, user)
 	}
+
 	if err := cursor.Err(); err != nil {
 		fmt.Println("Error iterating through results:", err)
 		return
 	}
+
 	if len(users) == 0 {
-		fmt.Println("No users found")
+		fmt.Println("No users found.")
 		return
 	}
-	fmt.Printf("All users:\n")
+
+	fmt.Println("All users:")
 	for _, user := range users {
 		fmt.Printf("Full Name: %s, Phone Number: %s, Gender: %s\n", user["fullName"], user["phone_number"], user["gender"])
 	}

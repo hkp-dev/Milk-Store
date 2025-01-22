@@ -53,6 +53,22 @@ func TestEnrollUser_Successfully(t *testing.T) {
 	})
 	shutDownDB()
 }
+
+// func TestEnrollUser_Fail(t *testing.T) {
+// 	err := setupDB()
+// 	assert.NoError(t, err)
+// 	fullName := "John Doe"
+// 	phoneNumber := "1234567890"
+// 	gender := "Male"
+// 	_, err = AddUserToDatabase(fullName, phoneNumber, gender)
+
+//		t.Run("TestAddUserFail", func(t *testing.T) {
+//			_, err := AddUserToDatabase(fullName, phoneNumber, gender)
+//			assert.Error(t, err)
+//			log.Printf("Error adding user: %v\n", err)
+//		})
+//		shutDownDB()
+//	}
 func TestFindCustomerByPhoneNumber_Successfully(t *testing.T) {
 	err := setupDB()
 	assert.NoError(t, err)
