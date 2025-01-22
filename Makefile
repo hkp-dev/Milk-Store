@@ -2,6 +2,7 @@ APP_NAME := manaegement system
 SRC_DIR := ./cmd
 BUILD_DIR := ./build
 BIN_DIR := $(BUILD_DIR)/bin
+SRC_TEST := ./database
 
 GO := go
 GO_RUN := $(GO) run

@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"testing"
 
@@ -23,7 +24,7 @@ func setupDB() error {
 	return nil
 }
 
-func teardownDB() {
+func shutDownDB() {
 	if err := Client.Disconnect(context.TODO()); err != nil {
 		fmt.Println("Error while disconnecting:", err)
 	}
@@ -50,9 +51,8 @@ func TestEnrollUser_Successfully(t *testing.T) {
 		_, err = collection.DeleteOne(context.TODO(), bson.M{"_id": insertedID})
 		assert.NoError(t, err)
 	})
-	teardownDB()
+	shutDownDB()
 }
-
 func TestFindCustomerByPhoneNumber_Successfully(t *testing.T) {
 	err := setupDB()
 	assert.NoError(t, err)
@@ -65,8 +65,9 @@ func TestFindCustomerByPhoneNumber_Successfully(t *testing.T) {
 		assert.Equal(t, user["phone_number"], phoneNumber)
 		_, err = Client.Database("newdb").Collection("milk-store-hkp").DeleteOne(context.TODO(), bson.M{"phone_number": phoneNumber})
 		assert.NoError(t, err)
+		log.Printf("Full Name: %s, Phone Number: %s, Gender: %s\n", user["fullName"], user["phone_number"], user["gender"])
 	})
-	teardownDB()
+	shutDownDB()
 }
 func TestGetAllUsers_Successfully(t *testing.T) {
 	err := setupDB()
@@ -87,6 +88,11 @@ func TestGetAllUsers_Successfully(t *testing.T) {
 				"fullName":     "Jane Smith",
 				"phone_number": "0987654321",
 				"gender":       "Female",
+			},
+			{
+				"fullName":     "Bob Johnson",
+				"phone_number": "9876543210",
+				"gender":       "Male",
 			},
 		}
 
@@ -109,13 +115,14 @@ func TestGetAllUsers_Successfully(t *testing.T) {
 
 		for _, user := range users {
 			assert.Contains(t, buf.String(), fmt.Sprintf("Full Name: %s, Phone Number: %s, Gender: %s", user["fullName"], user["phone_number"], user["gender"]))
+			log.Printf("Full Name: %s, Phone Number: %s, Gender: %s\n", user["fullName"], user["phone_number"], user["gender"])
 		}
 
 		_, err = collection.DeleteMany(context.TODO(), bson.M{})
 		assert.NoError(t, err)
 	})
 
-	teardownDB()
+	shutDownDB()
 }
 func TestGetAllUsers_NoUsersFound(t *testing.T) {
 	err := setupDB()
@@ -139,7 +146,7 @@ func TestGetAllUsers_NoUsersFound(t *testing.T) {
 		io.Copy(&buf, r)
 
 		assert.Contains(t, buf.String(), "No users found")
+		log.Print("No users found")
 	})
-
-	teardownDB()
+	shutDownDB()
 }
