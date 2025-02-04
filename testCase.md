@@ -71,21 +71,3 @@ Full Name: Bob Johnson, Phone Number: 9876543210, Gender: Male
 ```
 No users found
 ```
-
-
-
-
-<!-- 
-## Test Case 4: Retrieve All Users (No Data)
-**Description:** Verify that the function handles the scenario when no users exist in the database.
-
-**Steps to Execute:**
-1. Ensure the database contains no users.
-2. Call the function `GetAllUsers()`.
-3. Check the function response.
-
-**Expected Result:**
-- The function returns the message: `No users found`.
-
----
- -->
